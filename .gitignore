@@ -1,0 +1,20 @@
+# 字节码和缓存
+__pycache__/
+*.pyc
+
+# 虚拟环境
+venv/
+.venv/
+
+# IDE/编辑器配置
+.idea/
+.vscode/
+
+# 依赖和构建产物
+*.egg-info/
+dist/
+build/
+
+# 日志和数据文件 (根据需要添加)
+*.log
+data/
