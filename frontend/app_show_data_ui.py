@@ -190,24 +190,40 @@ def show_notebook_data():
 
 def show_indicator_data():
     """
-    显示宏观经济指标动态分析功能
+    显示宏观经济指标动态分析功能，并根据所选指标动态更新Y轴单位。
     """
     st.header("宏观经济指标动态分析")
 
-    # 读取经济指标数据
+    # --- 步骤 1: 丰富指标信息，增加 'unit' 字段 ---
     indicator_info = {
-        "gdp": "国内生产总值(GDP)",
-        "inflation": "通胀率",
-        "employment": "就业率",
-        "consumer_spending": "消费者支出"
+        "gdp": {
+            "name": "国内生产总值(GDP)",
+            "unit": "十亿美元"
+        },
+        "inflation": {
+            "name": "通胀率",
+            "unit": "百分比 (%)"
+        },
+        "employment": {
+            "name": "就业率",
+            "unit": "百分比 (%)"
+        },
+        "consumer_spending": {
+            "name": "消费者支出",
+            "unit": "十亿美元"
+        }
     }
 
-    # 创建选择框让用户选择指标
-    selected_series = st.selectbox(
+    # 创建选择框让用户选择指标 (key)
+    # format_func 用于在下拉菜单中显示中文名
+    selected_series_key = st.selectbox(
         "选择一个宏观经济指标",
         list(indicator_info.keys()),
-        format_func=lambda x: indicator_info[x]
+        format_func=lambda key: indicator_info[key]["name"]
     )
+
+    # 获取选中指标的完整信息
+    selected_indicator_details = indicator_info[selected_series_key]
 
     # 添加日期范围选择器，使用唯一key避免ID冲突
     start_date = st.date_input("开始日期", datetime.date(2000, 1, 1), key="indicator_start_date")
@@ -217,25 +233,34 @@ def show_indicator_data():
     if start_date > end_date:
         st.error("错误：开始日期必须早于结束日期")
     else:
-        # 模拟经济指标数据并绘图
-        if st.button("显示指标趋势图"):
+        # 在实际应用中，这里应该从真实数据源读取数据
+        if st.button("显示指标趋势图", key="indicator_button"):  # 给按钮也加一个key
             # 模拟数据
-            # 根据选择的日期范围生成数据
             date_range = pd.date_range(start_date, end_date, freq='M')
             periods = len(date_range) if len(date_range) > 0 else 100
-            values = np.cumsum(np.random.randn(periods)) + 100
 
-            # 创建数据框
+            # 根据单位模拟不同尺度的数据
+            if selected_indicator_details["unit"] == "十亿美元":
+                values = np.cumsum(np.random.randn(periods)) + 15000  # GDP/支出的量级
+            else:
+                values = np.cumsum(np.random.randn(periods) * 0.1) + 5  # 利率/失业率的量级
+
             chart_data = pd.DataFrame({
                 'date': date_range[:periods],
                 'value': values
             })
 
-            # 绘制图表
-            fig = px.line(chart_data, x='date', y='value',
-                          title=f'{indicator_info[selected_series]} 趋势图')
+            # --- 步骤 2: 动态更新图表标题和Y轴标签 ---
+            fig = px.line(
+                chart_data,
+                x='date',
+                y='value',
+                title=f'{selected_indicator_details["name"]} 趋势图'
+            )
             fig.update_xaxes(title_text="日期")
-            fig.update_yaxes(title_text="数值")
+            # 从字典中读取单位并设置为Y轴标题
+            fig.update_yaxes(title_text=selected_indicator_details["unit"])
+
             st.plotly_chart(fig, use_container_width=True)
 
 
