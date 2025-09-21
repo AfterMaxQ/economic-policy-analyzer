@@ -7,13 +7,13 @@ import pandas as pd
 
 app = FastAPI(title="经济政策影响分析工具 API")
 
-# 配置，现在只包含FRED ID
+# 配置 FRED ID
 SUPPORTED_SERIES_IDS = [
-    "GDP",
-    "CPIAUCSL",
-    "FEDFUNDS",
-    "UNRATE",
-    "DGS10"
+    "GDP", #国民生产总值
+    "CPIAUCSL", #CPI
+    "FEDFUNDS", # Federal Funds Rate
+    "UNRATE", #失业率
+    "DGS10" # 10年期国债收益率
 ]
 
 
@@ -38,7 +38,7 @@ def get_fred_data():
         df_filled = df_raw.ffill()
         df_cleaned = df_filled.dropna()
 
-        # --- 修改：将列名统一转换为小写，作为JSON的key ---
+        # 将列名统一转换为小写，作为JSON的key
         df_cleaned.columns = [col.lower() for col in df_cleaned.columns]
 
         df_json = df_cleaned.reset_index().to_dict(orient='records')
