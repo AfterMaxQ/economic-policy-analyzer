@@ -97,6 +97,7 @@ def get_var_irf(request_data: dict):
     steps = request_data.get("steps", 12)
     impulse = request_data.get("impulse", "FEDFUNDS")
     response_var = request_data.get("response", "INFLATION")
+    shock_size = request_data.get("shock_size", 1.0)
 
     try:
         if var_model_results is None:
@@ -122,12 +123,14 @@ def get_var_irf(request_data: dict):
 
         irf_values = irf.irfs[:, response_idx, impulse_idx]
 
-        irf_data = [{"step": i, "value": val} for i, val in enumerate(irf_values)]
+        scaled_irf_values = irf_values * shock_size
+        irf_data = [{"step": i, "value": val} for i, val in enumerate(scaled_irf_values)]
 
         return {
             "impulse": impulse,
             "response": response_var,
             "steps": steps,
+            "shock_size": shock_size,
             "data": irf_data
         }
 
