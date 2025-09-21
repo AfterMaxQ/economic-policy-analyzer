@@ -51,7 +51,10 @@ def get_fred_data():
         rename_map = {details["id"]:key for key, details in SUPPORTED_SERIES.items()}
         print("rename_map:\n", rename_map)
         df_cleaned = df_cleaned.rename(columns=rename_map)
-        df_json = df_cleaned.reset_index().to_dict(orient='records')
+        
+        # 将索引转换为普通列，确保包含 'index' 列
+        df_with_index = df_cleaned.reset_index()
+        df_json = df_with_index.to_dict(orient='records')
 
         return {
             "data": df_json,

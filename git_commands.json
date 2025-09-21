@@ -1,0 +1,95 @@
+{
+  "_comment": "这是你的 GitHub 项目管理命令速查表。每次需要操作 Git 时，直接复制粘贴相应的命令即可。",
+  "githubInfo": {
+    "username": "AfterMaxQ",
+    "repositoryName": "economic-policy-analyzer",
+    "repositoryURL_SSH": "git@github.com:AfterMaxQ/economic-policy-analyzer.git",
+    "localProjectPath_Windows": "G:\\jupyter\\economic-policy-analyzer"
+  },
+  "projectCommands": {
+    "dailyWorkflow": {
+      "comment": "日常开发最常用到的命令流程：写代码 -> 添加改动 -> 提交存档 -> 上传云端",
+      "add_all_changes": {
+        "description": "将所有修改、新增、删除的文件添加到 Git 的暂存区，准备提交。",
+        "command": "git add ."
+      },
+      "commit_changes": {
+        "description": "创建本地存档点。请替换括号内的文字为本次提交的清晰描述。",
+        "command_template": "git commit -m \"feat(scope): 你的提交描述，例如: feat(backend): 添加FRED数据接口\""
+      },
+      "push_to_github": {
+        "description": "将本地的存档点上传到 GitHub 远程仓库。",
+        "command": "git push"
+      },
+      "pull_from_github": {
+        "description": "从 GitHub 下载最新的代码到本地（在你开始写代码前，最好先运行一次）。",
+        "command": "git pull"
+      },
+      "status_check": {
+        "description": "查看当前工作区和暂存区的状态，了解哪些文件被修改/新增/未跟踪。",
+        "command": "git status"
+      }
+    },
+    "initialSetup_after_reboot": {
+      "comment": "每次电脑重启后，第一次进行 Git 操作前，通常需要重新加载 SSH 密钥。",
+      "cd_to_project_root_gitbash": {
+        "description": "在 Git Bash 中切换到你的项目根目录。",
+        "command": "cd /g/jupyter/economic-policy-analyzer"
+      },
+      "start_ssh_agent": {
+        "description": "启动 SSH Agent (如果它未运行)。",
+        "command": "eval \"$(ssh-agent -s)\""
+      },
+      "add_ssh_key_to_agent": {
+        "description": "将你的私钥加载到 SSH Agent。如果设置了密码，会提示输入。",
+        "command": "ssh-add ~/.ssh/id_ed25519"
+      },
+      "test_ssh_connection": {
+        "description": "测试 SSH 连接是否成功。如果看到 'Hi AfterMaxQ! ... successfully authenticated' 则成功。",
+        "command": "ssh -T git@github.com"
+      }
+    },
+    "troubleshooting_commands": {
+      "comment": "当遇到问题时，可能会用到的命令。",
+      "rename_branch_to_main": {
+        "description": "将本地主分支从 'master' 重命名为 'main' (仅当发现本地分支名为 master 且 GitHub 为 main 时使用)。",
+        "command": "git branch -M main"
+      },
+      "first_push_to_new_repo": {
+        "description": "第一次将本地仓库推送到 GitHub 的命令 (已成功，通常无需再次使用)。",
+        "command": "git push -u origin main"
+      },
+      "revert_file_changes": {
+        "description": "放弃对某个文件所有未提交的本地修改，恢复到上一个提交时的状态。请替换 <文件名>。",
+        "command_template": "git restore <文件名>"
+      },
+      "revert_all_uncommitted_changes": {
+        "description": "放弃所有未提交的本地修改，恢复到上一个提交时的状态。",
+        "command": "git restore ."
+      }
+    },
+    "projectSetup_commands": {
+      "comment": "项目环境设置相关命令 (在你已经创建好 Conda 环境 'economic_analyzer' 之后)。",
+      "activate_conda_env": {
+        "description": "激活你的 Conda 环境 (在新的终端窗口开始工作时，或切换环境时使用)。",
+        "command": "conda activate economic_analyzer"
+      },
+      "install_requirements": {
+        "description": "安装 'requirements.txt' 中列出的所有Python库。",
+        "command": "pip install -r requirements.txt"
+      },
+      "start_fastapi_backend": {
+        "description": "启动你的 FastAPI 后端服务。",
+        "command": "uvicorn backend.main_api:app --reload"
+      },
+      "start_streamlit_frontend": {
+        "description": "启动你的 Streamlit 前端应用。",
+        "command": "streamlit run frontend/app.py"
+      },
+      "start_jupyter_notebook": {
+        "description": "启动 Jupyter Notebook。",
+        "command": "jupyter notebook"
+      }
+    }
+  }
+}
