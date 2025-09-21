@@ -1,0 +1,23 @@
+# --- Backend ---
+fastapi
+uvicorn[standard]
+
+# --- Frontend ---
+streamlit
+
+# --- Data Science & ML Core ---
+pandas
+pandas-datareader # 用于方便地获取FRED数据
+plotly          # 用于交互式图表
+statsmodels     # 用于计量经济模型 (如VAR)
+requests        # 用于API请求
+
+# --- NLP ---
+transformers
+beautifulsoup4  # 用于网页爬虫
+sentencepiece   # transformers 的依赖
+accelerate      # 加速 transformers 模型
+
+# --- Jupyter Notebook (在环境中也安装一份，方便使用) ---
+notebook
+ipykernel

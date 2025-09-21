@@ -1,0 +1,233 @@
+{
+  "_comment": "这是经济政策影响分析工具的项目需求蓝图V2。本文档详细分解了每个核心功能，以指导具体的开发步骤。",
+  "projectName": "Economic Policy Impact Analyzer",
+  "projectDescription": "一个全栈Web应用，用于可视化、分析和模拟宏观经济政策对各项经济指标的影响。",
+  "projectVision": "旨在成为一个直观、交互式的平台，帮助学生、研究人员和金融爱好者理解复杂的经济政策动态。",
+  "currentPhase": "Phase 1: 基础架构与核心可视化",
+  "developmentStatus": "进行中",
+  "technicalStack": {
+    "backend": "FastAPI",
+    "frontend": "Streamlit",
+    "database": "SQLite (初期用于缓存爬取的数据和用户配置)",
+    "dataScience": [
+      "Pandas (数据处理)",
+      "pandas_datareader (便捷获取FRED数据)",
+      "Plotly (交互式图表)",
+      "Statsmodels (计量经济模型)",
+      "Hugging Face Transformers (NLP)",
+      "BeautifulSoup4 (网页爬虫)",
+      "Requests (HTTP请求)"
+    ],
+    "versionControl": "Git & GitHub"
+  },
+  "projectStructure": {
+    "_comment": "此部分定义了项目的代码文件结构及其核心职责。",
+    "root": [
+      {
+        "fileName": "README.md",
+        "purpose": "项目的总览、运行指南、开发日志和功能愿望单。"
+      },
+      {
+        "fileName": "requirements.txt",
+        "purpose": "记录项目所有的Python依赖库。"
+      },
+      {
+        "fileName": ".gitignore",
+        "purpose": "定义需要被Git忽略的文件和文件夹。"
+      },
+      {
+        "fileName": "project_requirements.json",
+        "purpose": "本文件，项目的动态蓝图。"
+      }
+    ],
+    "backend": [
+      {
+        "fileName": "__init__.py",
+        "purpose": "将backend文件夹标记为一个Python包。"
+      },
+      {
+        "fileName": "main_api.py",
+        "purpose": "FastAPI应用的主入口，定义所有API接口。",
+        "apiEndpoints": [
+          {
+            "path": "/",
+            "method": "GET",
+            "description": "根路径接口，返回服务状态。",
+            "status": "已完成"
+          },
+          {
+            "path": "/data/fred/{series_id}",
+            "method": "GET",
+            "pathParams": "series_id (string): FRED经济数据序列的ID, e.g., 'FEDFUNDS'.",
+            "queryParams": "start_date (string, optional): 'YYYY-MM-DD'格式的开始日期。",
+            "description": "根据提供的序列ID和可选的开始日期，从FRED获取时间序列数据。",
+            "status": "计划中"
+          },
+          {
+            "path": "/analysis/fomc",
+            "method": "GET",
+            "description": "获取所有已分析的FOMC会议日期及其情感分析得分。可能会实现缓存以提高性能。",
+            "status": "计划中"
+          },
+          {
+            "path": "/simulate/var_irf",
+            "method": "POST",
+            "requestBody": "{ 'shock_variable': string, 'shock_size': float, 'steps': int }",
+            "description": "接收一个政策冲击请求，加载预训练的VAR模型，计算并返回脉冲响应函数(IRF)的结果。",
+            "status": "计划中"
+          }
+        ]
+      }
+    ],
+    "frontend": [
+      {
+        "fileName": "app.py",
+        "purpose": "Streamlit应用的主入口，负责UI布局和页面路由。",
+        "uiComponents": [
+          {
+            "component": "主页面布局",
+            "description": "使用st.title, st.sidebar等创建应用的基本框架。",
+            "status": "已完成"
+          },
+          {
+            "component": "多页面导航",
+            "description": "使用st.sidebar或st.tabs将'数据可视化', '政策分析', '情景模拟'等功能模块分开。",
+            "status": "计划中"
+          }
+        ]
+      }
+    ],
+    "notebooks": [
+      {
+        "fileName": "01-data-exploration.ipynb",
+        "purpose": "实验区：探索pandas_datareader库获取FRED数据，并用Plotly进行各种图表的可视化尝试。"
+      },
+      {
+        "fileName": "02-nlp-poc.ipynb",
+        "purpose": "实验区：开发爬虫爬取FOMC声明，并使用FinBERT进行情感分析，评估效果。"
+      },
+      {
+        "fileName": "03-var-model-poc.ipynb",
+        "purpose": "实验区：使用statsmodels构建VAR模型，计算脉冲响应函数，理解其经济学含义。"
+      }
+    ]
+  },
+  "userStories": [
+    {
+      "persona": "经济学学生",
+      "story": "作为一名学生，我希望能在一个图表上同时看到利率和通胀率的变化，以便直观地理解它们之间的关系。",
+      "relatedFeature": "MVP-01"
+    },
+    {
+      "persona": "金融研究员",
+      "story": "作为一名研究员，我希望看到每次美联储议息会议声明的情感倾向，并与会后的市场短期波动进行对比，以研究政策语言的影响。",
+      "relatedFeature": "NLP-01"
+    },
+    {
+      "persona": "好奇的业余爱好者",
+      "story": "作为一名爱好者，我想通过拖动一个滑块来模拟‘加息0.25%’，并立即看到模型预测这对未来的GDP增长会产生什么样的影响。",
+      "relatedFeature": "SIM-01"
+    }
+  ],
+  "featureRoadmap": [
+    {
+      "id": "MVP-01",
+      "featureName": "FRED宏观经济数据可视化",
+      "description": "实现从FRED API获取数据，并通过交互式图表在前端展示。用户可以通过下拉菜单选择不同的经济指标。",
+      "priority": "高",
+      "status": "进行中",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "component": "Notebook",
+          "description": "使用pandas_datareader库，成功获取至少三个不同的FRED经济指标（如FEDFUNDS, CPIAUCSL, GDP），并用Plotly绘制出美观的时间序列图。",
+          "technologies": ["Jupyter", "pandas_datareader", "plotly"]
+        },
+        {
+          "step": 2,
+          "component": "Backend",
+          "description": "实现`/data/fred/{series_id}`接口。该接口能接收前端传来的series_id，调用FRED API，并将处理好的Pandas DataFrame转换为JSON格式返回。",
+          "technologies": ["FastAPI", "Pandas"]
+        },
+        {
+          "step": 3,
+          "component": "Frontend",
+          "description": "在Streamlit页面上，创建一个包含多个预设经济指标的`st.selectbox`。当用户选择一个指标时，前端向后端API发起请求。",
+          "technologies": ["Streamlit", "requests"]
+        },
+        {
+          "step": 4,
+          "component": "Frontend",
+          "description": "接收到后端返回的JSON数据后，将其转换为Pandas DataFrame，并使用`st.plotly_chart`展示出来，确保图表可以缩放和拖动。",
+          "technologies": ["Streamlit", "Plotly", "Pandas"]
+        }
+      ]
+    },
+    {
+      "id": "NLP-01",
+      "featureName": "FOMC声明情感分析",
+      "description": "爬取FOMC声明，使用NLP模型分析其情感倾向，并在时间轴上与经济数据一同展示。",
+      "priority": "高",
+      "status": "计划中",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "component": "Notebook",
+          "description": "编写Python脚本，使用Requests和BeautifulSoup4爬取美联储官网上从2000年至今的所有FOMC声明文本，并存为结构化数据（如CSV或JSON）。",
+          "technologies": ["Requests", "BeautifulSoup4", "Pandas"]
+        },
+        {
+          "step": 2,
+          "component": "Notebook",
+          "description": "加载一个预训练的金融情感分析模型（如FinBERT），对爬取的所有声明进行情感打分，并将分数与日期关联起来。",
+          "technologies": ["Hugging Face Transformers", "PyTorch"]
+        },
+        {
+          "step": 3,
+          "component": "Backend",
+          "description": "创建`/analysis/fomc`接口。该接口返回一个包含所有FOMC会议日期和对应情感分数的JSON数组。",
+          "technologies": ["FastAPI"]
+        },
+        {
+          "step": 4,
+          "component": "Frontend",
+          "description": "在经济数据图表上，调用`/analysis/fomc`接口，使用`fig.add_vline()`在每个FOMC会议日期处绘制一条垂直线，并在鼠标悬停时显示该次会议的情感得分。",
+          "technologies": ["Streamlit", "Plotly"]
+        }
+      ]
+    },
+    {
+      "id": "SIM-01",
+      "featureName": "交互式政策模拟",
+      "description": "基于VAR模型，允许用户通过滑块调整关键政策变量，实时可视化其对其他经济指标的脉冲响应。",
+      "priority": "中",
+      "status": "计划中",
+      "implementationSteps": [
+        {
+          "step": 1,
+          "component": "Notebook",
+          "description": "收集用于建模的多个宏观经济变量（如利率、通胀率、失业率、GDP增长率），并使用`statsmodels`库训练一个VAR模型。",
+          "technologies": ["Statsmodels", "Pandas"]
+        },
+        {
+          "step": 2,
+          "component": "Backend",
+          "description": "实现`/simulate/var_irf`接口。该接口加载预训练好的VAR模型，根据前端传来的冲击参数，计算脉冲响应函数(IRF)并返回结果。",
+          "technologies": ["FastAPI", "Statsmodels"]
+        },
+        {
+          "step": 3,
+          "component": "Frontend",
+          "description": "创建一个新的'情景模拟'页面。使用`st.slider`让用户选择冲击大小，并用`st.button`触发模拟请求。",
+          "technologies": ["Streamlit"]
+        },
+        {
+          "step": 4,
+          "component": "Frontend",
+          "description": "将后端返回的IRF数据用Plotly动态绘制成多张图表，清晰地展示一个变量的冲击如何影响所有其他变量。",
+          "technologies": ["Plotly", "Pandas"]
+        }
+      ]
+    }
+  ]
+}
